@@ -1,7 +1,7 @@
 rviz_fps_plugin
 ===============
 
-*Now compatible with ROS Kinetic (and possibly newer ROS distros)!*
+tested on ROS Melodic - Ubuntu 18
 
 ## Overview
 
