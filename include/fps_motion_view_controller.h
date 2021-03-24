@@ -39,59 +39,59 @@ using namespace rviz;
 
 namespace rviz
 {
-class FloatProperty;
-class BoolProperty;
-class SceneNode;
-class Shape;
-class VectorProperty;
+  class FloatProperty;
+  class BoolProperty;
+  class SceneNode;
+  class Shape;
+  class VectorProperty;
 
-/** @brief A first-person camera, controlled by yaw, pitch, and position. */
-class FPSMotionViewController : public FramePositionTrackingViewController
-{
-Q_OBJECT
-public:
-  FPSMotionViewController();
-  virtual ~FPSMotionViewController();
+  /** @brief A first-person camera, controlled by yaw, pitch, and position. */
+  class FPSMotionViewController : public FramePositionTrackingViewController
+  {
+    Q_OBJECT
+  public:
+    FPSMotionViewController();
+    virtual ~FPSMotionViewController();
 
-  virtual void onInitialize();
+    virtual void onInitialize();
 
-  void yaw( float angle );
-  void pitch( float angle );
-  void move( float x, float y, float z );
-  void fly( float x, float y, float z );
-  void changeZ(float z );
+    void yaw(float angle);
+    void pitch(float angle);
+    void move(float x, float y, float z);
+    void fly(float x, float y, float z);
+    void changeZ(float z);
 
-  virtual void handleMouseEvent(ViewportMouseEvent& evt);
+    void topView();
+    void rearView();
+    void frontView();
+    void sideView();
 
-  virtual void lookAt( const Ogre::Vector3& point );
+    virtual void lookAt(const Ogre::Vector3 &point);
+    virtual void reset();
 
-  virtual void reset();
-
-  /** @brief Configure the settings of this view controller to give,
+    /** @brief Configure the settings of this view controller to give,
    * as much as possible, a similar view as that given by the
    * @a source_view.
    *
    * @a source_view must return a valid @c Ogre::Camera* from getCamera(). */
-  virtual void mimic( ViewController* source_view );
+    virtual void mimic(ViewController *source_view);
+    virtual void update(float dt, float ros_dt);
+    void setCamera(Ogre::Camera *source_camera) { setPropertiesFromCamera(source_camera); };
 
-  virtual void update(float dt, float ros_dt);
+  protected:
+    virtual void onTargetFrameChanged(const Ogre::Vector3 &old_reference_position, const Ogre::Quaternion &old_reference_orientation);
 
-  void setCamera( Ogre::Camera* source_camera ) { setPropertiesFromCamera(source_camera );};
+    void setPropertiesFromCamera(Ogre::Camera *source_camera);
 
-protected:
-  virtual void onTargetFrameChanged(const Ogre::Vector3& old_reference_position, const Ogre::Quaternion& old_reference_orientation);
+    void updateCamera();
+    void updateCamera(Ogre::Vector3 &position, Ogre::Quaternion &orientation);
+    Ogre::Quaternion getOrientation(); ///< Return a Quaternion based on the yaw and pitch properties.
 
-  void setPropertiesFromCamera( Ogre::Camera* source_camera );
-
-  void updateCamera();
-  void updateCamera(Ogre::Vector3& position, Ogre::Quaternion& orientation);
-  Ogre::Quaternion getOrientation(); ///< Return a Quaternion based on the yaw and pitch properties.
-
-  FloatProperty* yaw_property_;                         ///< The camera's yaw (rotation around the y-axis), in radians
-  FloatProperty* pitch_property_;                       ///< The camera's pitch (rotation around the x-axis), in radians
-  VectorProperty* position_property_;
-  BoolProperty* fly_property_;
-};
+    FloatProperty *yaw_property_;   ///< The camera's yaw (rotation around the y-axis), in radians
+    FloatProperty *pitch_property_; ///< The camera's pitch (rotation around the x-axis), in radians
+    VectorProperty *position_property_;
+    BoolProperty *fly_property_;
+  };
 
 } // end namespace rviz
 
